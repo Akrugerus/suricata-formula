@@ -39,8 +39,9 @@ package-install-prereqs-suricata:
       - unless: grep -r suricata /etc/apt/sources.list.d/
       - require:
         - pkg: package-install-prereqs-suricata
-  {% elif salt.grains.get('oscodename') == 'buster' %}
+
   # Use buster-backports repo
+  {% elif salt.grains.get('oscodename') == 'buster' %}
   buster-backports:
     pkgrepo.managed:
       - name: deb http://deb.debian.org/debian buster-backports main
