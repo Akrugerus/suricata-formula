@@ -47,6 +47,22 @@ package-install-prereqs-suricata:
       - name: deb http://deb.debian.org/debian buster-backports main
       - file: /etc/apt/sources.list.d/backports.list
       - refresh: True
+      
+    file.managed:
+      - name: /etc/apt/preferences.d/99debian-backports
+      - contents: |
+        Package: libhtp2
+        Pin: release a=buster-backports
+        Pin-Priority: 900
+        Package: suricata
+        Pin: release a=buster-backports
+        Pin-Priority: 900
+        Package: suricata-oinkmaster
+        Pin: release a=buster-backports
+        Pin-Priority: 900
+        Package: suricata-update
+        Pin: release a=buster-backports
+        Pin-Priority: 900
   {% endif %}
 {% endif %} # End RedHat/Debian
 
