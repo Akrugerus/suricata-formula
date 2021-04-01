@@ -6,9 +6,6 @@
 # Install suricata from a package repo
 package-install-suricata:
   pkg.installed:
-    {% if salt.grains.get('oscodename') == 'buster' %}
-    - fromrepo: buster-backports
-    {% endif %}
     - pkgs:
       - suricata
     - refresh: True
