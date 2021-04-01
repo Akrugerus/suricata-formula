@@ -22,22 +22,30 @@ package-install-prereqs-suricata:
 
 # Install prereqs for Debian based systems
 {% elif salt.grains.get('os_family') == 'Debian' %}
-package-install-prereqs-suricata:
-  pkg.installed:
-    - pkgs:
-       - curl
-       - gawk
-       - libtcmalloc-minimal4
-       - software-properties-common
-    - refresh: True
+  {% if salt.grains.get('os') == 'Ubuntu' %}
+  package-install-prereqs-suricata:
+    pkg.installed:
+      - pkgs:
+         - curl
+         - gawk
+         - libtcmalloc-minimal4
+         - software-properties-common
+      - refresh: True
 
-# Add the suricata ppa
-command-add-suricata-ppa:
-  cmd.run:
-    - name: add-apt-repository ppa:oisf/suricata-stable -y
-    - unless: grep -r suricata /etc/apt/sources.list.d/
-    - require:
-      - pkg: package-install-prereqs-suricata
-
+  # Add the suricata ppa
+  command-add-suricata-ppa:
+    cmd.run:
+      - name: add-apt-repository ppa:oisf/suricata-stable -y
+      - unless: grep -r suricata /etc/apt/sources.list.d/
+      - require:
+        - pkg: package-install-prereqs-suricata
+  {% elif salt.grains.get('oscodename') == 'buster' %}
+  # Use buster-backports repo
+  buster-backports:
+    pkgrepo.managed:
+      - name: deb http://deb.debian.org/debian buster-backports main
+      - file: /etc/apt/sources.list.d/backports.list
+      - refresh: True
+  {% endif %}
 {% endif %} # End RedHat/Debian
 
